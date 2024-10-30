@@ -78,23 +78,16 @@ const KanbanBoard = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div style={{ display: "flex", gap: "16px", backgroundColor: "#000", padding: "20px", minHeight: "100vh" }}>
+      <div className="kanban-container">
         {Object.keys(tickets).map((column) => (
           <Droppable key={column} droppableId={column}>
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  backgroundColor: "#333",
-                  padding: "16px",
-                  width: "30%",
-                  minHeight: "400px",
-                  borderRadius: "8px",
-                  color: "#FFF",
-                }}
+                className="kanban-column"
               >
-                <h2 style={{ color: "#FFF", textAlign: "center", marginBottom: "30px", marginTop: "25px", }}>{column.toUpperCase()}</h2>
+                <h2 className="kanban-column-header">{column.toUpperCase()}</h2>
                 {tickets[column].length === 0 ? (
                   <p style={{ color: "#999" }}>No tickets available</p>
                 ) : (
@@ -118,6 +111,44 @@ const KanbanBoard = () => {
           </Droppable>
         ))}
       </div>
+      <style jsx>{`
+        .kanban-container {
+          display: flex;
+          justify-content: space-evenly;
+          gap: 16px;
+          background-color: #000;
+          padding: 20px;
+          min-height: 100vh;
+          flex-direction: row; /* Default for larger screens */
+        }
+
+        .kanban-column {
+          background-color: #333;
+          padding: 16px;
+          width: 30%;
+          min-height: 400px;
+          border-radius: 8px;
+          color: #fff;
+        }
+
+        .kanban-column-header {
+          color: #fff;
+          text-align: center;
+          margin-bottom: 30px;
+          margin-top: 25px;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+          .kanban-container {
+            flex-direction: column; /* Stack columns vertically on mobile */
+          }
+
+          .kanban-column {
+            width: 100%; /* Full width on narrow screens */
+          }
+        }
+      `}</style>
     </DragDropContext>
   );
 };
