@@ -1,3 +1,4 @@
+// layout/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -17,8 +18,11 @@ export default function LoginPage() {
         username,
         password,
       });
-      console.log(response.data.message);
-      router.push("/");
+
+      if (response.status === 200) {
+        console.log(response.data.message);
+        router.push("/");
+      }
     } catch (error) {
       console.error("Login error:", error);
     }
