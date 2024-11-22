@@ -2,12 +2,30 @@
 import { useState, useEffect } from "react";
 import EditTicketForm from "@/app/(components)/EditTicketForm";
 
-const TicketPage = ({ params }) => {
-  const [ticketData, setTicketData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+// Define types for the ticket data
+interface Ticket {
+  _id: string;
+  title?: string;
+  description?: string;
+  priority?: number;
+  progress?: number;
+  status?: string;
+  category?: string;
+  createdAt?: string;
+}
+
+interface TicketPageProps {
+  params: {
+    id: string;
+  };
+}
+
+const TicketPage: React.FC<TicketPageProps> = ({ params }) => {
+  const [ticketData, setTicketData] = useState<Ticket | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const EDITMODE = params.id !== "new";
 
-  const fetchTicketById = async (id) => {
+  const fetchTicketById = async (id: string) => {
     try {
       const response = await fetch(`/api/Tickets/${id}`, {
         cache: "no-store",

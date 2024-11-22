@@ -32,5 +32,10 @@
   },
   "devDependencies": {
     "@types/react": "18.3.12"
-  }
+  },
+  "description": "",
+  "main": "next.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

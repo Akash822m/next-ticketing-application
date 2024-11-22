@@ -4,9 +4,23 @@ import DeleteBlock from "./DeleteBlock";
 import ProgressDisplay from "./ProgressDisplay";
 import Link from "next/link";
 
-const TicketCard = ({ ticket }) => {
-  function formatTimestamp(timestamp) {
-    const options = {
+interface Ticket {
+  _id: string;
+  title: string;
+  description: string;
+  priority: number;
+  progress: number;
+  status: string;
+  createdAt: string;
+}
+
+interface TicketCardProps {
+  ticket: Ticket;
+}
+
+const TicketCard: React.FC<TicketCardProps> = ({ ticket }) => {
+  const formatTimestamp = (timestamp: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -16,10 +30,8 @@ const TicketCard = ({ ticket }) => {
     };
 
     const date = new Date(timestamp);
-    const formattedDate = date.toLocaleString("en-US", options);
-
-    return formattedDate;
-  }
+    return date.toLocaleString("en-US", options);
+  };
 
   const createdDateTime = formatTimestamp(ticket.createdAt);
 

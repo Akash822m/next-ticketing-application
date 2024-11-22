@@ -14,13 +14,17 @@ export const metadata = {
   description: "Creating a functional ticketing system.",
 };
 
-export default function RootLayout({ children }) {
+// Define type for the RootLayout props
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
         <div className="flex flex-col h-screen max-h-screen">
           <Nav />
-
           <div className="flex-grow overflow-y-auto bg-page text-default-text">
             {children}
           </div>
@@ -28,4 +32,6 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

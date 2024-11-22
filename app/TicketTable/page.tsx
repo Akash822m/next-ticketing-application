@@ -2,21 +2,37 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import TicketCard from "../(components)/TicketCard";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import TicketTableCard from "../(components)/TicketTableCard";
 
+// Define the Ticket interface based on the ticket object structure
+interface Ticket {
+  _id: string;
+  title: string;
+  description?: string;
+  priority?: number;
+  progress?: number;
+  status: "not started" | "started" | "done";
+  category?: string;
+  createdAt?: string;
+}
+
+// Define the state structure for the tickets
+interface TicketsState {
+  "not started": Ticket[];
+  started: Ticket[];
+  done: Ticket[];
+}
+
 const KanbanBoard = () => {
-  const [tickets, setTickets] = useState({
+  const [tickets, setTickets] = useState<TicketsState>({
     "not started": [],
     started: [],
     done: [],
   });
   const router = useRouter();
 
-  // Check authentication status on load
-
-
+  // Fetch tickets from the API and update the state
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -24,9 +40,9 @@ const KanbanBoard = () => {
         const data = await response.json();
         if (data.tickets) {
           setTickets({
-            "not started": data.tickets.filter((ticket) => ticket.status === "not started"),
-            started: data.tickets.filter((ticket) => ticket.status === "started"),
-            done: data.tickets.filter((ticket) => ticket.status === "done"),
+            "not started": data.tickets.filter((ticket: Ticket) => ticket.status === "not started"),
+            started: data.tickets.filter((ticket: Ticket) => ticket.status === "started"),
+            done: data.tickets.filter((ticket: Ticket) => ticket.status === "done"),
           });
         } else {
           console.error("No tickets found");
@@ -38,11 +54,13 @@ const KanbanBoard = () => {
     fetchTickets();
   }, []);
 
-  const onDragEnd = async (result) => {
+  // Handle the drag and drop logic
+  const onDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) return;
-    const sourceCol = source.droppableId;
-    const destCol = destination.droppableId;
+
+    const sourceCol = source.droppableId as keyof TicketsState;
+    const destCol = destination.droppableId as keyof TicketsState;
 
     if (sourceCol === destCol) {
       const items = Array.from(tickets[sourceCol]);
@@ -56,6 +74,7 @@ const KanbanBoard = () => {
       movedTicket.status = destCol;
       destItems.splice(destination.index, 0, movedTicket);
       setTickets((prev) => ({ ...prev, [sourceCol]: sourceItems, [destCol]: destItems }));
+
       await fetch(`/api/Tickets/${movedTicket._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -72,10 +91,10 @@ const KanbanBoard = () => {
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps} className="kanban-column">
                 <h2 className="kanban-column-header">{column.toUpperCase()}</h2>
-                {tickets[column].length === 0 ? (
+                {tickets[column as keyof TicketsState].length === 0 ? (
                   <p style={{ color: "#999" }}>No tickets available</p>
                 ) : (
-                  tickets[column].map((ticket, index) => (
+                  tickets[column as keyof TicketsState].map((ticket, index) => (
                     <Draggable key={ticket._id} draggableId={ticket._id} index={index}>
                       {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>

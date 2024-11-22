@@ -5,7 +5,23 @@ import ProgressDisplay from "./ProgressDisplay";
 import Link from "next/link";
 import CategoryDisplay from "./CategoryDisplay";
 
-const getColor = (status) => {
+// Define the Ticket interface
+interface Ticket {
+  _id: string;
+  title: string;
+  description: string;
+  priority: number;
+  progress: number;
+  status: string;
+  category: string;
+  createdAt: string;
+}
+
+interface TicketTableCardProps {
+  ticket: Ticket;
+}
+
+const getColor = (status: string): string => {
   switch (status.toLowerCase()) {
     case "done":
       return "bg-green-200";
@@ -18,8 +34,8 @@ const getColor = (status) => {
   }
 };
 
-const formatTimestamp = (timestamp) => {
-  const options = {
+const formatTimestamp = (timestamp: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -31,11 +47,15 @@ const formatTimestamp = (timestamp) => {
   return date.toLocaleString("en-US", options);
 };
 
-const TicketTableCard = ({ ticket }) => {
+const TicketTableCard: React.FC<TicketTableCardProps> = ({ ticket }) => {
   const createdDateTime = formatTimestamp(ticket.createdAt);
 
   return (
-    <div className={`flex flex-col transition-transform duration-300 transform hover:scale-[1.02] bg-card rounded-md shadow-lg p-3 m-2 ${getColor(ticket.status)}`}>
+    <div
+      className={`flex flex-col transition-transform duration-300 transform hover:scale-[1.02] bg-card rounded-md shadow-lg p-3 m-2 ${getColor(
+        ticket.status
+      )}`}
+    >
       <div className="flex mb-3">
         <PriorityDisplay priority={ticket.priority} />
         <div className="ml-auto">

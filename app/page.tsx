@@ -2,19 +2,30 @@
 import React, { useState, useEffect } from "react";
 import TicketCard from "./(components)/TicketCard";
 
+// Define the Ticket interface based on the ticket object structure
+interface Ticket {
+  _id: string;
+  title: string;
+  description?: string;
+  category?: string;
+  priority?: number;
+  status?: "not started" | "started" | "done";
+  createdAt?: string;
+}
+
 const Dashboard = () => {
-  const [tickets, setTickets] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchTickets = async () => {
     try {
       const response = await fetch("/api/Tickets", {
         cache: "no-store",
       });
-      
+
       const data = await response.json();
       console.log("API Response:", data);
-      
+
       if (data.tickets) {
         setTickets(data.tickets);
       } else {
@@ -46,7 +57,7 @@ const Dashboard = () => {
             <div className="lg:grid grid-cols-2 xl:grid-cols-4">
               {tickets
                 .filter((ticket) => ticket.category === uniqueCategory)
-                .map((filteredTicket, _index) => (
+                .map((filteredTicket) => (
                   <TicketCard
                     id={filteredTicket._id}
                     key={filteredTicket._id}

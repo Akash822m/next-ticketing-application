@@ -1,11 +1,33 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const EditTicketForm = ({ ticket }) => {
+// Define types for the ticket and form data
+interface Ticket {
+  _id: string;
+  title: string;
+  description: string;
+  priority: number;
+  progress: number;
+  status: string;
+  category: string;
+}
+
+interface FormData {
+  title: string;
+  description: string;
+  priority: number;
+  progress: number;
+  status: string;
+  category: string;
+}
+
+const EditTicketForm: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
   const EDITMODE = ticket._id === "new" ? false : true;
   const router = useRouter();
-  const startingTicketData = {
+
+  const startingTicketData: FormData = {
     title: "",
     description: "",
     priority: 1,
@@ -15,34 +37,34 @@ const EditTicketForm = ({ ticket }) => {
   };
 
   if (EDITMODE) {
-    startingTicketData["title"] = ticket.title;
-    startingTicketData["description"] = ticket.description;
-    startingTicketData["priority"] = ticket.priority;
-    startingTicketData["progress"] = ticket.progress;
-    startingTicketData["status"] = ticket.status;
-    startingTicketData["category"] = ticket.category;
+    startingTicketData.title = ticket.title;
+    startingTicketData.description = ticket.description;
+    startingTicketData.priority = ticket.priority;
+    startingTicketData.progress = ticket.progress;
+    startingTicketData.status = ticket.status;
+    startingTicketData.category = ticket.category;
   }
 
-  const [formData, setFormData] = useState(startingTicketData);
+  const [formData, setFormData] = useState<FormData>(startingTicketData);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
     const name = e.target.name;
 
-    setFormData((preState) => ({
-      ...preState,
+    setFormData((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (EDITMODE) {
       const res = await fetch(`/api/Tickets/${ticket._id}`, {
         method: "PUT",
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ formData }),
       });
@@ -53,8 +75,9 @@ const EditTicketForm = ({ ticket }) => {
       const res = await fetch("/api/Tickets", {
         method: "POST",
         body: JSON.stringify({ formData }),
-        //@ts-ignore
-        "Content-Type": "application/json",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       if (!res.ok) {
         throw new Error("Failed to create ticket");
@@ -68,12 +91,12 @@ const EditTicketForm = ({ ticket }) => {
   const categories = [
     "Hardware Problem",
     "Software Problem",
-    "Application Deveopment",
+    "Application Development",
     "Project",
   ];
 
   return (
-    <div className=" flex justify-center">
+    <div className="flex justify-center">
       <form
         onSubmit={handleSubmit}
         method="post"
@@ -86,7 +109,7 @@ const EditTicketForm = ({ ticket }) => {
           name="title"
           type="text"
           onChange={handleChange}
-          required={true}
+          required
           value={formData.title}
         />
         <label>Description</label>
@@ -94,9 +117,9 @@ const EditTicketForm = ({ ticket }) => {
           id="description"
           name="description"
           onChange={handleChange}
-          required={true}
+          required
           value={formData.description}
-          rows="5"
+          rows={5}
         />
         <label>Category</label>
         <select
@@ -104,8 +127,8 @@ const EditTicketForm = ({ ticket }) => {
           value={formData.category}
           onChange={handleChange}
         >
-          {categories?.map((category, _index) => (
-            <option key={_index} value={category}>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
               {category}
             </option>
           ))}
@@ -113,51 +136,19 @@ const EditTicketForm = ({ ticket }) => {
 
         <label>Priority</label>
         <div>
-          <input
-            id="priority-1"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={1}
-            checked={formData.priority == 1}
-          />
-          <label>1</label>
-          <input
-            id="priority-2"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={2}
-            checked={formData.priority == 2}
-          />
-          <label>2</label>
-          <input
-            id="priority-3"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={3}
-            checked={formData.priority == 3}
-          />
-          <label>3</label>
-          <input
-            id="priority-4"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={4}
-            checked={formData.priority == 4}
-          />
-          <label>4</label>
-          <input
-            id="priority-5"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={5}
-            checked={formData.priority == 5}
-          />
-          <label>5</label>
+          {[1, 2, 3, 4, 5].map((priority) => (
+            <React.Fragment key={priority}>
+              <input
+                id={`priority-${priority}`}
+                name="priority"
+                type="radio"
+                onChange={handleChange}
+                value={priority}
+                checked={formData.priority === priority}
+              />
+              <label>{priority}</label>
+            </React.Fragment>
+          ))}
         </div>
         <label>Progress</label>
         <input
@@ -170,7 +161,11 @@ const EditTicketForm = ({ ticket }) => {
           onChange={handleChange}
         />
         <label>Status</label>
-        <select name="status" value={formData.status} onChange={handleChange}>
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+        >
           <option value="not started">Not Started</option>
           <option value="started">Started</option>
           <option value="done">Done</option>

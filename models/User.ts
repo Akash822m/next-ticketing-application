@@ -15,7 +15,7 @@ mongoose.connect(connectionString)
 
 mongoose.Promise = global.Promise;
 
-interface IUser extends Document {
+interface IUser extends Document { 
   username: string;
   password: string;
 }

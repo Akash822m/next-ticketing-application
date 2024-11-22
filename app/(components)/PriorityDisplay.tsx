@@ -1,7 +1,11 @@
 import { faFire } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const PriorityDisplay = ({ priority }) => {
+interface PriorityDisplayProps {
+  priority: number;
+}
+
+const PriorityDisplay: React.FC<PriorityDisplayProps> = ({ priority }) => {
   return (
     <div className="flex justify-start align-baseline">
       <FontAwesomeIcon

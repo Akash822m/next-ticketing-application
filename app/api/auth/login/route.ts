@@ -1,4 +1,4 @@
-// app/api/auth/login/route.ts
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../../../models/User";
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       "Path=/",
       "Max-Age=3600",
       "SameSite=Strict",
-      process.env.NODE_ENV === "production" ? "Secure" : "", // Secure cookie in production
+      ...(process.env.NODE_ENV === "production" ? ["Secure"] : []), // Conditionally add Secure
     ].join("; ");
 
     return new Response(JSON.stringify({ message: "Login successful" }), {
