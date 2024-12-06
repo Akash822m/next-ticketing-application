@@ -19,20 +19,32 @@ interface NavProps {
 const Nav: React.FC<NavProps> = ({onSearch}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [statusFilter, setStatusFilter] = useState("");
+  const [username, setUsername] = useState<string | null>(null);
+
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const response = await axios.get("/api/auth/validate", { withCredentials: true });
+        //console.log("Validation response:", response.data);
         setIsLoggedIn(response.data.loggedIn);
+        //console.log("isLoggedIn updated:", response.data.loggedIn);
+  
+        // if (response.data.loggedIn) {
+        //   const userResponse = await axios.get("/api/auth/user", { withCredentials: true });
+        //   console.log("User response:", userResponse.data);
+        //   setUsername(userResponse.data.username);
+        // }
       } catch (error) {
         console.error("Error validating token:", error);
         setIsLoggedIn(false);
+        setUsername(null);
       }
     };
-
+  
     checkLoginStatus();
   }, []);
+  
 
   const handleSearch = () => {
     if (onSearch) {
@@ -107,6 +119,7 @@ const Nav: React.FC<NavProps> = ({onSearch}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-4">
+          {/* {username && <span className="text-white font-bold">{username}</span>} */}
           <button onClick={handleLogout} className="text-white font-bold text-lg">
             <FontAwesomeIcon icon={faSignOutAlt} className="icon cursor-pointer" />
           </button>

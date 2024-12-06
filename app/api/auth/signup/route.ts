@@ -7,19 +7,25 @@ export async function POST(req: Request) {
     const { username, password } = await req.json();
 
     if (!username || !password) {
-      return new Response(JSON.stringify({ error: "Username and password are required" }), { status: 400 });
+      return new Response(JSON.stringify({ error: "Username and password are required" }), {
+        status: 400,
+      });
     }
 
     // Check if the username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return new Response(JSON.stringify({ error: "Username is already taken" }), { status: 400 });
+      return new Response(JSON.stringify({ error: "Username is already taken" }), {
+        status: 400,
+      });
     }
 
-    // Optionally, validate the password strength (basic example)
+    // Password strength validation
     if (password.length < 8) {
       return new Response(
-        JSON.stringify({ error: "Password must be at least 8 characters long" }),
+        JSON.stringify({
+          error: "Password must be at least 8 characters long!",
+        }),
         { status: 400 }
       );
     }
@@ -30,7 +36,7 @@ export async function POST(req: Request) {
 
     // Save the user to the database
     await user.save();
-    
+
     return new Response(JSON.stringify({ message: "User created" }), { status: 201 });
   } catch (error) {
     console.error("Signup error:", error);

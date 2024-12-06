@@ -17,8 +17,11 @@ export default function SignupPage() {
       await axios.post("/api/auth/signup", { username, password });
       // Redirect to login page on successful signup
       router.push("/login");
-    } catch (error) {
-      console.error("Signup error:", error);
+    } catch (error: any) {
+      //Display error message from the api response
+      const errorMessage = error.response?.data?.error || "Signup failled. Try again!"
+      console.error("Signup error:", errorMessage);
+      alert(errorMessage);
     }
   };
 
