@@ -5,6 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { ResponseCookies } from "next/dist/compiled/@edge-runtime/cookies";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -21,7 +22,7 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         console.log(response.data.message);
-        router.push("/");
+        router.push("/MainPage");
       }
     } catch (error) {
       console.error("Login error:", error);
