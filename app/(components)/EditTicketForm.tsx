@@ -85,7 +85,7 @@ const EditTicketForm: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
     }
 
     router.refresh();
-    router.push("/MainPage");
+    router.push("/");
   };
 
   const categories = [
