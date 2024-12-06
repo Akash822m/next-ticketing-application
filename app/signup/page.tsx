@@ -25,7 +25,7 @@ export default function SignupPage() {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="p-6 bg-white rounded shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Signup</h2>
+        <h2 className="text-xl font-semibold mb-4 text-page">Signup</h2>
         <input
           type="text"
           value={username}
@@ -42,7 +42,10 @@ export default function SignupPage() {
           placeholder="Password"
           required
         />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white p-2 rounded"
+        >
           Signup
         </button>
       </form>

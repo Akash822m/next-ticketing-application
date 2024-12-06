@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import TicketCard from "../(components)/TicketCard";
+import Nav from "../(components)/Nav";
 
 // Define the Ticket interface based on the ticket object structure
 interface Ticket {
@@ -17,11 +18,10 @@ const MainPage = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchTickets = async () => {
+  const fetchTickets = async (status?: string) => {
     try {
-      const response = await fetch("/api/Tickets", {
-        cache: "no-store",
-      });
+      const url = status ? `/api/Tickets?status=${status}` : "/api/Tickets";
+      const response = await fetch(url, { cache: "no-store" });
 
       const data = await response.json();
       console.log("API Response:", data);
@@ -45,11 +45,17 @@ const MainPage = () => {
   // Get unique categories
   const uniqueCategories = [...new Set(tickets.map(({ category }) => category))];
 
+  const handleSearch = (status: string) => {
+    setIsLoading(true);
+    fetchTickets(status); // Fetch tickets based on status filter
+  };
+
   if (isLoading) return <p>Loading tickets...</p>;
   if (!tickets.length) return <p>No tickets available.</p>;
 
   return (
     <div className="p-5">
+      <Nav onSearch={handleSearch} />
       <div>
         {uniqueCategories.map((uniqueCategory, categoryIndex) => (
           <div key={categoryIndex} className="mb-4">

@@ -29,6 +29,11 @@ export default function LoginPage() {
     }
   };
 
+  const handleSignupRedirect = () => {
+    router.push("/signup");
+  };
+
+
   return (
     <div className="flex justify-center items-center h-screen bg-card-hover">
       <form
@@ -58,6 +63,9 @@ export default function LoginPage() {
         >
           Login
         </button>
+
+        <p className="mt-4 text-center text-page">New User? Click Signup Button</p>
+        <button type="submit" onClick={handleSignupRedirect} className="w-full bg-blue-600 text-white p-2 rounded mt-4 hover:bg-blue-700">Signup</button>
       </form>
     </div>
   );

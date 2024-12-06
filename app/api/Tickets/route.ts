@@ -9,9 +9,16 @@ interface TicketData {
   // Add any other fields based on the Ticket model
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const tickets = await Ticket.find();
+    const url = new URL(req.url);
+    const status = url.searchParams.get("status"); // Get the 'status' query parameter
+
+    // Build the filter object
+    const filter = status ? { status } : {};
+
+    // Fetch tickets based on the filter
+    const tickets = await Ticket.find(filter);
     return NextResponse.json({ tickets }, { status: 200 });
   } catch (err) {
     console.error("Error fetching tickets:", err);
