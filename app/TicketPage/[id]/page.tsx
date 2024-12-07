@@ -5,11 +5,11 @@ import EditTicketForm from "@/app/(components)/EditTicketForm";
 // Define types for the ticket data
 interface Ticket {
   _id: string;
-  title?: string;
+  title: string;
   description?: string;
   priority?: number;
   progress?: number;
-  status?: string;
+  status: "not started" | "started" | "done";
   category?: string;
   createdAt?: string;
 }

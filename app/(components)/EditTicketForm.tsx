@@ -7,11 +7,12 @@ import React, { useState } from "react";
 interface Ticket {
   _id: string;
   title: string;
-  description: string;
-  priority: number;
-  progress: number;
-  status: string;
-  category: string;
+  description?: string;
+  category?: string;
+  priority?: number;
+  status?: "not started" | "started" | "done";
+  progress?: number; // Make 'progress' optional
+  createdAt?: string;
 }
 
 interface FormData {

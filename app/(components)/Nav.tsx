@@ -19,6 +19,7 @@ interface NavProps {
 const Nav: React.FC<NavProps> = ({onSearch}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [statusFilter, setStatusFilter] = useState("");
+ 
 
   useEffect(() => {
     const checkLoginStatus = async () => {

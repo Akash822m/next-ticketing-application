@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import TicketCard from "../(components)/TicketCard";
 import Nav from "../(components)/Nav";
 
-// Define the Ticket interface based on the ticket object structure
 interface Ticket {
   _id: string;
   title: string;
@@ -43,7 +42,9 @@ const MainPage = () => {
   }, []);
 
   // Get unique categories
-  const uniqueCategories = [...new Set(tickets.map(({ category }) => category))];
+  const uniqueCategories = Array.from(
+    new Set(tickets.map(({ category }) => category || "Uncategorized"))
+  );
 
   const handleSearch = (status: string) => {
     setIsLoading(true);
